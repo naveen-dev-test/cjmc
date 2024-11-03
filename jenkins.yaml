@@ -1,10 +1,13 @@
+---
 jenkins:
   clouds:
     - kubernetes:
         name: "k8s"
         namespace: "devops-tools"
-        serverUrl: "https://kubernetes.default.svc.cluster.local"
-        jenkinsUrl: "http://jenkins-service.devops-tools.svc.cluster.local:8080"  # Use internal service URL
+        serverUrl: >
+          https://127.0.0.1:6443
+        jenkinsUrl: >
+          http://jenkins-service.devops-tools.svc.cluster.local:8080  # Use internal service URL
         containerCapStr: "10"
         credentialsId: "jenkins-admin"  # Use your service account for RBAC
         podRetention: "Never"
@@ -15,7 +18,7 @@ jenkins:
             containers:
               - name: "jnlp"
                 image: "jenkins/inbound-agent:4.3-4"
-                args: ["\$(JENKINS_SECRET)", "\$(JENKINS_NAME)"]
+                args: ["${JENKINS_SECRET}", "${JENKINS_NAME}"]
               - name: "build-container"
                 image: "alpine:latest"  # Use your preferred image
                 command:
@@ -26,5 +29,6 @@ jenkins:
 
 unclassified:
   location:
-    url: http://jenkins-service.devops-tools.svc.cluster.local:8080  # Use internal service URL
+    url: >
+      http://jenkins-service.devops-tools.svc.cluster.local:8080  # Use internal service URL
 
