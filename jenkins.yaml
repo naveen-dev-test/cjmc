@@ -1,0 +1,30 @@
+jenkins:
+  clouds:
+    - kubernetes:
+        name: "k8s"
+        namespace: "devops-tools"
+        serverUrl: "https://kubernetes.default.svc.cluster.local"
+        jenkinsUrl: "http://localhost:32000"  # Adjust to match your setup
+        containerCapStr: "10"
+        credentialsId: "jenkins-admin"  # Use your service account for RBAC
+        podRetention: "Never"
+        templates:
+          - name: "default-pod-template"
+            label: "k8s-agent"
+            serviceAccount: "jenkins-admin"
+            containers:
+              - name: "jnlp"
+                image: "jenkins/inbound-agent:4.3-4"
+                args: ["\$(JENKINS_SECRET)", "\$(JENKINS_NAME)"]
+              - name: "build-container"
+                image: "alpine:latest"  # Use your preferred image
+                command:
+                  - "cat"
+                ttyEnabled: true
+            nodeSelector: "kubernetes.io/hostname=lima-rancher-desktop"  # Optional, based on your setup
+            yamlMergeStrategy: "override"
+
+unclassified:
+  location:
+    url: http://localhost:32000
+
