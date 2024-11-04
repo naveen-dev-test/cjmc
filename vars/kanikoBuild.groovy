@@ -4,9 +4,9 @@ def call(Map config) {
     pipeline {
         agent any
         environment {
-            DOCKER_IMAGE = config.dockerImage // Set the image name from parameters
-            DOCKER_REGISTRY = config.dockerRegistry // Set the registry URL from parameters
-            DOCKER_REGISTRY_CREDENTIALS = config.dockerRegistryCredentials // Credentials ID for Docker registry
+            DOCKER_IMAGE = "${config.dockerImage}" // Set the image name from parameters
+            DOCKER_REGISTRY = "${config.dockerRegistry}" // Set the registry URL from parameters
+            DOCKER_REGISTRY_CREDENTIALS = "${config.dockerRegistryCredentials}" // Credentials ID for Docker registry
         }
         stages {
             stage('Kaniko Multi-Arch Build') {
@@ -32,4 +32,3 @@ def call(Map config) {
         }
     }
 }
-
